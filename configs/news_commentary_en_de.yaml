@@ -1,0 +1,35 @@
+# Organic EN->DE bitext: News Commentary v18.1 (~400k sentence pairs).
+# Fetch it with scripts/download_news_commentary.sh.
+src_lang: en
+tgt_lang: de
+output: data/clean/news_commentary_en_de
+
+input:
+  path: data/raw/news-commentary-v18.de-en.tsv.gz
+  format: tsv
+  columns: [de, en]   # file order: German, then English
+  src_col: en
+  tgt_col: de
+  repartition: 16     # .gz files are read as a single partition
+
+filters:
+  min_words: 3
+  max_words: 150
+  max_length_ratio: 2.5
+  min_letter_ratio: 0.5
+
+langid:
+  enabled: true
+  min_prob: 0.5
+  # Plausible confusions for EN/DE; restricting candidates helps on short sentences.
+  candidates: [en, de, nl, fr, da, sv, lb, it, es]
+
+dedup:
+  exact_on: source
+  near: true
+  bands: 10          # with rows_per_band 10: near-duplicate above ~0.79 Jaccard
+  rows_per_band: 10
+
+spark:
+  spark.driver.memory: 4g
+  spark.sql.shuffle.partitions: 32

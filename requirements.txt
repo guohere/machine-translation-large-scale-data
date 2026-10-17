@@ -1,0 +1,7 @@
+# Stage 1: data cleaning. Versions the pipeline and its tests were verified with.
+# PySpark needs Java 17 or 21.
+pyspark==4.2.0
+pandas>=2.2,<3   # PySpark 4.2 does not fully support pandas 3 yet
+pyarrow>=15
+py3langid==0.4.0
+pyyaml>=6
